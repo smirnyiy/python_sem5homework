@@ -7,78 +7,52 @@
 # Сколько конфет нужно взять первому игроку, чтобы забрать все конфеты у своего 
 # конкурента?
 
-from random import randint as r
+
+# человек против человека
 
 
-def correct_value(value, player):
-    result = input(f'\n{player}, твоя очередь брать конфеты: ')
-    while not result.isdigit() or not (29 > int(result) > 0) or int(result) > value:
-        if value >= 28:
-            result = input(f'{player}, можно вводить значения только от 1 до 28: ')
-        else:
-            result = input(f'{player}, можно вводить значения только от 1 до {value}: ')
-    return int(result)
+from random import randint
 
+value = int(input('Введите колличество конфет на столе: '))
+print('Начало игры')
+print(f'На столе лежит {value} конфет(а)')
 
-def player_init():
-    player = input('\nВведите ваше имя: ')
-    return player
+def input_dat(name):
+    x = int(input(f"Сколько конфет возьмет игрок {name} (от 1 до 28): "))
+    while x < 1 or x > 28:
+        x = int(input(f"Неверно введено количество конфет "))
+    return x
 
+def p_print(name, k, counter, value):
+    print(f"Игрок {name} взял {k}, теперь у него {counter}, на столе осталось {value} конфет.")
 
-def players_draw(player):
-    draw = r(1, 2)
-    if draw == 1:
-        print(f'\nТебе повезло, {player}. По результатам жеребьевки ты ходишь первым!')
-        return 1
+player1 = input("Введите имя первого игрока: ")
+player2 = input("Введите имя второго игрока: ")
+#value = 201
+flag = randint(0,2)
+if flag:
+    print(f"Первый ходит {player1}")
+else:
+    print(f"Первый ходит {player2}")
+
+counter1 = 0 
+counter2 = 0
+
+while value != 0:
+    if flag:
+        k = input_dat(player1)
+        counter1 += k
+        value -= k
+        flag = False
+        p_print(player1, k, counter1, value)
     else:
-        print(f'\nПо результатам жеребьевки первым ходит "Bot". Сдавайся!')
-        return 2
+        k = input_dat(player2)
+        counter2 += k
+        value -= k
+        flag = True
+        p_print(player2, k, counter2, value)
 
-
-def game_candies(value, player, turn):
-    save_value = value
-    one_time_print = 0
-    while value > 0:
-        if turn == 1:
-            move = correct_value(value, player)
-            value -= move
-            if value == 0:
-                print(f'\n{player} ПОБЕДИЛ!!!')
-                break
-            print(f'\nОсталось конфет: {value}\n')
-            turn = 2
-        if turn == 2:
-            if save_value == value:
-                move = value % 29
-                one_time_print += 1
-            elif value == value - value % 29:
-                if save_value == value + save_value % 29:
-                    print('Bot: Хороший ход!')
-                if value == 29:
-                    print('Bot: Так не честно!!!')
-                move = r(1, 28)
-            elif value % 29 != 0:
-                if one_time_print == 0:
-                    print('Bot: Ты упустил свой шанс! Сдавайся!')
-                move = value % 29
-                one_time_print += 1             
-            print(f'Bot взял конфеты в колличестве: {move}')
-            value -= move                                   
-            if value == 0:
-                print(f'ПОБЕДИТЕЛЬ Bot !!!')
-                break
-            print(f'\nОсталось конфет: {value}')
-            turn = 1
-
-
-# count_candies = input('Введите колличество конфет на столе: ')
-print('!!!ИГРА В КОНФЕТЫ!!!')
-print('Брать со стола можно от 1 до 28 конфет за раз')
-print('Кто последний делает ход - тот победил!')
-
-count_candies = int(input('Введите колличество конфет на столе: '))
-
-player = player_init()
-turn = players_draw(player)
-print(f'\nКолличество конфет на столе: {count_candies}')
-game_candies(count_candies, player, turn)
+if flag:
+    print(f"Выиграл {player1}")
+else:
+    print(f"Выиграл {player2}")
