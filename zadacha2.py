@@ -28,7 +28,6 @@ def p_print(name, k, counter, value):
 
 player1 = input("Введите имя первого игрока: ")
 player2 = input("Введите имя второго игрока: ")
-#value = 201
 flag = randint(0,2)
 if flag:
     print(f"Первый ходит {player1}")
